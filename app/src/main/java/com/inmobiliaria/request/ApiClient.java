@@ -10,11 +10,13 @@ import com.inmobiliaria.model.Propietario;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public class ApiClient {
 
@@ -47,6 +49,17 @@ public class ApiClient {
         Call<Propietario> obtenerPropietario(
                 @Header("Authorization") String token
         );
+
+        @PUT("api/Propietarios/actualizar")
+        Call<Propietario> actualizarPropietario(@Header("Authorization") String token, @Body Propietario propietario);
+
+        @FormUrlEncoded
+        @PUT("api/Propietarios/changePassword")
+        Call<Void> cambiarClave(
+                @Header("Authorization") String token,
+                @Field("currentPassword") String currentPassword,
+                @Field("newPassword") String newPassword
+        );
     }
 
     public static void guardarToken(Context context, String token) {
@@ -58,7 +71,7 @@ public class ApiClient {
 
         SharedPreferences.Editor editor = sp.edit();
 
-        editor.putString("token", token);
+        editor.putString("token", "Bearer " + token);
 
         editor.apply();
     }
