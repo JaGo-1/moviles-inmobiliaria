@@ -1,5 +1,7 @@
 package com.inmobiliaria.model;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Propietario implements Serializable {
@@ -65,6 +67,7 @@ public class Propietario implements Serializable {
         this.telefono = telefono;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Propietario{" +
