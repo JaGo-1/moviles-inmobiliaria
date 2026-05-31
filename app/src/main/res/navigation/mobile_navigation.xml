@@ -50,4 +50,16 @@
         android:label="Agregar Inmueble"
         tools:layout="@layout/fragment_agregar_inmueble" />
 
+    <fragment
+        android:id="@+id/nav_contratos"
+        android:name="com.inmobiliaria.ui.contratos.ContratosFragment"
+        android:label="Contratos Vigentes"
+        tools:layout="@layout/fragment_contratos" />
+
+    <fragment
+        android:id="@+id/nav_inquilinos"
+        android:name="com.inmobiliaria.ui.inquilinos.InquilinosFragment"
+        android:label="Inquilinos"
+        tools:layout="@layout/fragment_inquilinos" />
+
 </navigation>

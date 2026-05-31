@@ -20,9 +20,6 @@
         android:id="@+id/nav_contratos"
         android:title="Contratos"/>
 
-    <item
-        android:id="@+id/nav_pagos"
-        android:title="Pagos"/>
 
     <item
         android:id="@+id/nav_logout"
