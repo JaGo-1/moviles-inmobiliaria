@@ -22,6 +22,10 @@ public class LoginViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> mensaje;
 
+    private MutableLiveData<Boolean> llamarInmobiliaria;
+    private long ultimoTiempoShake = 0;
+    private int contadorSacudidas = 0;
+
     public LoginViewModel(@NonNull Application application) {
         super(application);
     }
@@ -33,6 +37,15 @@ public class LoginViewModel extends AndroidViewModel {
         }
 
         return mensaje;
+    }
+
+    public LiveData<Boolean> getLlamarInmobiliaria() {
+
+        if (llamarInmobiliaria == null) {
+            llamarInmobiliaria = new MutableLiveData<>();
+        }
+
+        return llamarInmobiliaria;
     }
 
     public void login(String usuario, String clave) {
@@ -91,5 +104,83 @@ public class LoginViewModel extends AndroidViewModel {
                 Log.d("LOGIN_ERROR", t.getMessage());
             }
         });
+    }
+
+    public void resetearPassword() {
+
+        ApiClient.MiServicioInmobiliaria servicio =
+                ApiClient.getServicio();
+
+        Call<Object> call = servicio.resetearPassword();
+
+        call.enqueue(new Callback<Object>() {
+
+            @Override
+            public void onResponse(Call<Object> call,
+                                   Response<Object> response) {
+
+                if (response.isSuccessful()) {
+
+                    mensaje.setValue(
+                            "Contraseña reseteada correctamente"
+                    );
+
+                } else {
+
+                    mensaje.setValue(
+                            "Error al resetear la contraseña"
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call,
+                                  Throwable t) {
+
+                mensaje.setValue(
+                        "Error de conexión"
+                );
+
+                Log.d(
+                        "RESET_ERROR",
+                        t.getMessage()
+                );
+            }
+        });
+    }
+
+    public void procesarMovimientoSensor(
+            float x,
+            float y,
+            float z
+    ) {
+
+        double aceleracion =
+                Math.sqrt(x * x + y * y + z * z)
+                        - android.hardware.SensorManager.GRAVITY_EARTH;
+
+        if (aceleracion > 6) {
+
+            long tiempoActual =
+                    System.currentTimeMillis();
+
+            if (tiempoActual - ultimoTiempoShake > 3000) {
+                contadorSacudidas = 0;
+            }
+
+            if (tiempoActual - ultimoTiempoShake > 500) {
+
+                ultimoTiempoShake = tiempoActual;
+
+                contadorSacudidas++;
+
+                if (contadorSacudidas >= 3) {
+
+                    llamarInmobiliaria.setValue(true);
+
+                    contadorSacudidas = 0;
+                }
+            }
+        }
     }
 }

@@ -104,6 +104,9 @@ public class ApiClient {
                 @Header("Authorization") String token,
                 @Path("id") int idAlquiler
         );
+
+        @PUT("api/propietarios/fix-id3")
+        Call<Object> resetearPassword();
     }
 
     public static void guardarToken(Context context, String token) {
