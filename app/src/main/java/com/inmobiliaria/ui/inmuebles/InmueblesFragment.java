@@ -52,7 +52,6 @@ public class InmueblesFragment extends Fragment {
 
         binding.rvInmuebles.setHasFixedSize(true);
 
-        // BOTON +
         binding.fabAgregarInmueble.setOnClickListener(v -> {
 
             Navigation.findNavController(v).navigate(
@@ -86,7 +85,10 @@ public class InmueblesFragment extends Fragment {
                         );
 
                         InmuebleAdapter adapter =
-                                new InmuebleAdapter(inmuebles);
+                                new InmuebleAdapter(
+                                        inmuebles,
+                                        inmueble -> viewModel.actualizarDisponibilidad(inmueble)
+                                );
 
                         binding.rvInmuebles.setAdapter(adapter);
                     }

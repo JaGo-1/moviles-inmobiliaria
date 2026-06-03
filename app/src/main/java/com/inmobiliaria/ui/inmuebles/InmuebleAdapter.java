@@ -3,7 +3,6 @@ package com.inmobiliaria.ui.inmuebles;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,16 +14,21 @@ import com.inmobiliaria.request.ApiClient;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class InmuebleAdapter extends RecyclerView.Adapter<InmuebleAdapter.InmuebleViewHolder> {
 
-    private List<Inmueble> listaInmuebles;
+    public interface OnDisponibilidadChangeListener {
+        void onDisponibilidadChanged(Inmueble inmueble);
+    }
 
-    public InmuebleAdapter(List<Inmueble> listaInmuebles) {
+    private List<Inmueble> listaInmuebles;
+    private OnDisponibilidadChangeListener listener;
+
+    public InmuebleAdapter(
+            List<Inmueble> listaInmuebles,
+            OnDisponibilidadChangeListener listener
+    ) {
         this.listaInmuebles = listaInmuebles;
+        this.listener = listener;
     }
 
     @NonNull
@@ -82,48 +86,9 @@ public class InmuebleAdapter extends RecyclerView.Adapter<InmuebleAdapter.Inmueb
                             isChecked ? "Disponible" : "No Disponible"
                     );
 
-                    String token = ApiClient.obtenerToken(
-                            holder.itemView.getContext()
-                    );
-
-                    Call<Inmueble> call = ApiClient
-                            .getServicio()
-                            .actualizarInmueble(token, inmueble);
-
-                    call.enqueue(new Callback<Inmueble>() {
-                        @Override
-                        public void onResponse(Call<Inmueble> call,
-                                               Response<Inmueble> response) {
-
-                            if (response.isSuccessful()) {
-
-                                Toast.makeText(
-                                        holder.itemView.getContext(),
-                                        "Estado actualizado",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-
-                            } else {
-
-                                Toast.makeText(
-                                        holder.itemView.getContext(),
-                                        "Error al actualizar",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Inmueble> call,
-                                              Throwable t) {
-
-                            Toast.makeText(
-                                    holder.itemView.getContext(),
-                                    "Error de conexión",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        }
-                    });
+                    if (listener != null) {
+                        listener.onDisponibilidadChanged(inmueble);
+                    }
                 }
         );
 

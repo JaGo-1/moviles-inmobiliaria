@@ -3,6 +3,7 @@ package com.inmobiliaria.ui.inmuebles.agregar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -52,6 +53,8 @@ public class AgregarInmuebleFragment extends Fragment {
 
         abrirGaleria();
 
+        cargarSpinners();
+
         viewModel.getImagen().observe(getViewLifecycleOwner(), uri -> {
 
             binding.ivImagen.setImageURI(uri);
@@ -78,14 +81,57 @@ public class AgregarInmuebleFragment extends Fragment {
 
             viewModel.guardarInmueble(
                     binding.etDireccion.getText().toString(),
-                    binding.etUso.getText().toString(),
-                    binding.etTipo.getText().toString(),
+                    binding.spUso.getSelectedItem().toString(),
+                    binding.spTipo.getSelectedItem().toString(),
                     binding.etAmbientes.getText().toString(),
                     binding.etSuperficie.getText().toString(),
                     binding.etValor.getText().toString()
             );
 
         });
+    }
+
+    private void cargarSpinners() {
+
+        String[] usos = {
+                "Residencial",
+                "Comercial",
+                "Personal",
+                "Doméstico"
+        };
+
+        String[] tipos = {
+                "Casa",
+                "Departamento",
+                "Local Comercial",
+                "Loft"
+        };
+
+        ArrayAdapter<String> adapterUsos =
+                new ArrayAdapter<>(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        usos
+                );
+
+        adapterUsos.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
+        binding.spUso.setAdapter(adapterUsos);
+
+        ArrayAdapter<String> adapterTipos =
+                new ArrayAdapter<>(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        tipos
+                );
+
+        adapterTipos.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
+        binding.spTipo.setAdapter(adapterTipos);
     }
 
     private void abrirGaleria() {

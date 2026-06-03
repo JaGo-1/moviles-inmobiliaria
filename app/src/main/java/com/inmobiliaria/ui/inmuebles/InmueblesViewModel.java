@@ -66,4 +66,42 @@ public class InmueblesViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void actualizarDisponibilidad(Inmueble inmueble) {
+
+        Context context = getApplication().getApplicationContext();
+
+        String token = ApiClient.obtenerToken(context);
+
+        if (token == null || token.isEmpty()) {
+            mensaje.setValue("Sesión inválida.");
+            return;
+        }
+
+        ApiClient.getServicio()
+                .actualizarInmueble(token, inmueble)
+                .enqueue(new Callback<Inmueble>() {
+
+                    @Override
+                    public void onResponse(Call<Inmueble> call,
+                                           Response<Inmueble> response) {
+
+                        if (response.isSuccessful()) {
+
+                            mensaje.setValue("Estado actualizado");
+
+                        } else {
+
+                            mensaje.setValue("Error al actualizar");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Inmueble> call,
+                                          Throwable t) {
+
+                        mensaje.setValue("Error de conexión");
+                    }
+                });
+    }
 }
