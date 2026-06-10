@@ -42,7 +42,17 @@
             android:id="@+id/action_nav_inmuebles_to_agregarInmuebleFragment"
             app:destination="@id/agregarInmuebleFragment" />
 
+        <action
+            android:id="@+id/action_nav_inmuebles_to_nav_detalle_inmueble"
+            app:destination="@id/nav_detalle_inmueble" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_detalle_inmueble"
+        android:name="com.inmobiliaria.ui.inmuebles.detalle.DetalleInmuebleFragment"
+        android:label="Detalle del Inmueble"
+        tools:layout="@layout/fragment_detalle_inmueble" />
 
     <fragment
         android:id="@+id/agregarInmuebleFragment"

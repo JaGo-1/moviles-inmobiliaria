@@ -20,15 +20,22 @@ public class InmuebleAdapter extends RecyclerView.Adapter<InmuebleAdapter.Inmueb
         void onDisponibilidadChanged(Inmueble inmueble);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Inmueble inmueble);
+    }
+
     private List<Inmueble> listaInmuebles;
     private OnDisponibilidadChangeListener listener;
+    private OnItemClickListener itemClickListener;
 
     public InmuebleAdapter(
             List<Inmueble> listaInmuebles,
-            OnDisponibilidadChangeListener listener
+            OnDisponibilidadChangeListener listener,
+            OnItemClickListener itemClickListener
     ) {
         this.listaInmuebles = listaInmuebles;
         this.listener = listener;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -98,11 +105,22 @@ public class InmuebleAdapter extends RecyclerView.Adapter<InmuebleAdapter.Inmueb
         Glide.with(holder.itemView.getContext())
                 .load(imagenUrl)
                 .into(holder.binding.ivImagen);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(inmueble);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return listaInmuebles.size();
+    }
+
+    public void setListaInmuebles(List<Inmueble> list) {
+        this.listaInmuebles = list;
+        notifyDataSetChanged();
     }
 
     public static class InmuebleViewHolder extends RecyclerView.ViewHolder {

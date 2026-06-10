@@ -34,6 +34,10 @@ public class InmueblesViewModel extends AndroidViewModel {
         return mensaje;
     }
 
+    public void clearMensaje() {
+        mensaje.setValue(null);
+    }
+
     public void obtenerInmuebles() {
 
         Context context = getApplication().getApplicationContext();

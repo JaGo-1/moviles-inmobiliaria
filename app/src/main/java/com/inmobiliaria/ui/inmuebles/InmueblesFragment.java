@@ -63,13 +63,14 @@ public class InmueblesFragment extends Fragment {
         viewModel.getMensaje().observe(
                 getViewLifecycleOwner(),
                 mensaje -> {
-
-                    Toast.makeText(
-                            getContext(),
-                            mensaje,
-                            Toast.LENGTH_LONG
-                    ).show();
-
+                    if (mensaje != null) {
+                        Toast.makeText(
+                                getContext(),
+                                mensaje,
+                                Toast.LENGTH_LONG
+                        ).show();
+                        viewModel.clearMensaje();
+                    }
                 }
         );
 
@@ -84,13 +85,24 @@ public class InmueblesFragment extends Fragment {
                                 "Cantidad: " + inmuebles.size()
                         );
 
-                        InmuebleAdapter adapter =
-                                new InmuebleAdapter(
-                                        inmuebles,
-                                        inmueble -> viewModel.actualizarDisponibilidad(inmueble)
-                                );
-
-                        binding.rvInmuebles.setAdapter(adapter);
+                        InmuebleAdapter adapter = (InmuebleAdapter) binding.rvInmuebles.getAdapter();
+                        if (adapter == null) {
+                            adapter = new InmuebleAdapter(
+                                    inmuebles,
+                                    inmueble -> viewModel.actualizarDisponibilidad(inmueble),
+                                    inmueble -> {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("inmueble", inmueble);
+                                        Navigation.findNavController(getView()).navigate(
+                                                R.id.action_nav_inmuebles_to_nav_detalle_inmueble,
+                                                bundle
+                                        );
+                                    }
+                            );
+                            binding.rvInmuebles.setAdapter(adapter);
+                        } else {
+                            adapter.setListaInmuebles(inmuebles);
+                        }
                     }
                 }
         );
